@@ -1,23 +1,27 @@
 class LogLineParser
-
-  attr_reader :line
-  attr_reader :message
-
   def initialize(line)
-    @line = line.split(':')
+    @line = line
   end
 
   def message
-    '%<message>s' % {message: line[1].strip}
+    message = @line.split(":")
+    message[1].strip
   end
 
   def log_level
-    log_level = "%s" % [line[0].strip]
-    '%<log_level>s' % {log_level: log_level.tr('[]', '').downcase}
+
+    log_level_end = @line.index(']')
+    #debug "The value is #{log_level_end}."
+
+    log_level_start = @line.index('[')
+    #debug "The value is #{log_level_start}."
+    log_level = @line.slice(log_level_start+1,log_level_end-1).downcase
+
   end
 
   def reformat
-    '%<message>s (%<log_level>s)' % {message: message, log_level: log_level}
+    #debug "The value is #{message}."
+    #debug "The value is #{log_level}."
+    message + ' ' + '(' + log_level + ')'
   end
-
 end
